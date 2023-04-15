@@ -1,8 +1,9 @@
 import requests
 import smtplib
+import html
 
-MY_EMAIL = "xxxx"
-MY_PASSWORD = "yyyyy"
+MY_EMAIL = "bowlermj84@gmail.com"
+MY_PASSWORD = "esxozymdjxlwazno"
 
 STOCK_NAME = "TSLA"
 COMPANY_NAME = "Tesla Inc"
@@ -84,10 +85,18 @@ if percentage_difference > 0:
 
 #TODO 8. - Create a new list of the first 3 article's headline and description using list comprehension.
 
-    formatted_articles = [f"Headline: {article['title']}. \nBrief: {article['description']}" for article in three_articles]
+    for article in three_articles:
+        # formatted_articles = [f"Headline: {article['title']}. \nBrief: {article['description']}" for article in three_articles]
+        article['description'] = article['description'].replace('“', '"')
+        article['description'] = article['description'].replace('“', '"')
+        article['description'] = article['description'].replace('”', '"')
+        article['description'] = article['description'].replace('…', '...')
+        formatted_articles = [f"Headline: {article['title']}. \nBrief: {article['description']}"]
+    formatted_articles = formatted_articles
     print(formatted_articles)
+    
 #TODO 9. - Send each article as a separate message via Twilio.
-    with smtplib.SMTP("smtp.mail.yahoo.com") as connection:
+    with smtplib.SMTP("smtp.gmail.com") as connection:
         connection.starttls()
         connection.login(MY_EMAIL, MY_PASSWORD)
         connection.sendmail(
