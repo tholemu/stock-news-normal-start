@@ -85,10 +85,8 @@ if percentage_difference > 0:
 #TODO 8. - Create a new list of the first 3 article's headline and description using list comprehension.
 
     for article in three_articles:
-        article['description'] = article['description'].replace('“', '"')
-        article['description'] = article['description'].replace('“', '"')
-        article['description'] = article['description'].replace('”', '"')
-        article['description'] = article['description'].replace('…', '...')
+        article['description'] = article['description'].replace('“', '"').replace('“', '"') \
+            .replace('”', '"').replace('…', '...')
         formatted_articles = [f"Headline: {article['title']}. \nBrief: {article['description']}"]
     formatted_articles = formatted_articles
     print(formatted_articles)
