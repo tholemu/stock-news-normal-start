@@ -1,5 +1,8 @@
 import requests
+import smtplib
 
+MY_EMAIL = "xxxx"
+MY_PASSWORD = "yyyyy"
 
 STOCK_NAME = "TSLA"
 COMPANY_NAME = "Tesla Inc"
@@ -16,6 +19,11 @@ stock_params = {
     "apikey": STOCK_API_KEY,
 }
 
+news_params = {
+    "apikey": NEWS_API_KEY,
+    "qinTitle": COMPANY_NAME,
+    "language": "en",
+}
 
  ## STEP 1: Use https://www.alphavantage.co/documentation/#daily
 # When stock price increase/decreases by 5% between yesterday and the day before yesterday then print("Get News").
@@ -48,8 +56,8 @@ print(f"The percentage difference between yesterday's and the day before yesterd
 
 #TODO 5. - If TODO4 percentage is greater than 5 then print("Get News").
 
-if percentage_difference > 5:
-    print("Get News")
+# if percentage_difference > 5:
+#     print("Get News")
 
 
 
@@ -58,7 +66,17 @@ if percentage_difference > 5:
 
 #TODO 6. - Instead of printing ("Get News"), use the News API to get articles related to the COMPANY_NAME.
 
+if percentage_difference > 0:
+    # print("Get News")
+    news_response = requests.get(NEWS_ENDPOINT, params=news_params)
+    news_response.raise_for_status()
+    news_data = news_response.json()["articles"]
+
+
 #TODO 7. - Use Python slice operator to create a list that contains the first 3 articles. Hint: https://stackoverflow.com/questions/509211/understanding-slice-notation
+
+    three_articles = news_data[:3]
+    print(three_articles)
 
 
     ## STEP 3: Use twilio.com/docs/sms/quickstart/python
@@ -66,9 +84,17 @@ if percentage_difference > 5:
 
 #TODO 8. - Create a new list of the first 3 article's headline and description using list comprehension.
 
-#TODO 9. - Send each article as a separate message via Twilio. 
-
-
+    formatted_articles = [f"Headline: {article['title']}. \nBrief: {article['description']}" for article in three_articles]
+    print(formatted_articles)
+#TODO 9. - Send each article as a separate message via Twilio.
+    with smtplib.SMTP("smtp.mail.yahoo.com") as connection:
+        connection.starttls()
+        connection.login(MY_EMAIL, MY_PASSWORD)
+        connection.sendmail(
+            from_addr=MY_EMAIL,
+            to_addrs=MY_EMAIL,
+            msg=f"Subject: Tesla News\n\n {formatted_articles}"
+        )
 
 #Optional TODO: Format the message like this: 
 """
